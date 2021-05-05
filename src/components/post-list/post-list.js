@@ -3,14 +3,13 @@ import PostListItem from '../post-list-item/post-list-item';
 
 import './post-list.css';
 
-const PostList = () => {
+const PostList = ({posts, setPosts}) => {
     return(
         <ul className='app-list list-group'>
-            <PostListItem/>
-            <PostListItem/>
-            <PostListItem/>
+           <PostListItem posts={posts} setPosts={setPosts}/>
         </ul>
     )
 }
 
 export default PostList;
+
