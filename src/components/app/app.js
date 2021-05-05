@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {v4 as uuidv4} from 'uuid';
 import Header from '../header/app-header';
 import SearchPanel from '../search-panel/search-panel';
@@ -28,9 +28,38 @@ const App = () => {
             id: uuidv4(),
             label: 'Just another text',
             important: false,
-            like: false
+            like: true
         }
     ]);
+
+    const inputRef = useRef();
+    const handleAdding = (e) => {
+        e.preventDefault();
+        const label = e.target.addPost.value;
+        if (!label) return;
+        const newPost = {
+            id: uuidv4(),
+            label,
+            important: false,
+            like: false
+        };
+        setPosts([...posts, newPost]);
+        inputRef.current.value = '';
+    }
+
+    const handleDelete = (id) => {
+        setPosts((posts => {
+            return posts.filter((item) => item.id !== id);
+        }));
+    }
+
+    const onImportant = (id) => {
+        setPosts(posts.map((item) => (item.id === id) ? {...item, important: !item.important} : item));
+    }
+
+    const onLike = (id) => {
+        setPosts(posts.map((item) => (item.id === id) ? {...item, like: !item.like} : item));
+    }
 
     return(
         <div className='app'>
@@ -39,8 +68,8 @@ const App = () => {
                 <SearchPanel/>
                 <PostFilter/>
             </div>
-            <PostList posts={posts} setPosts={setPosts}/>
-            <PostAddForm posts={posts} setPosts={setPosts}/>
+            <PostList posts={posts} setPosts={setPosts} handleDelete={handleDelete} onImportant={onImportant} onLike={onLike}/>
+            <PostAddForm handleAdding={handleAdding} inputRef={inputRef}/>
         </div>
     )
 }

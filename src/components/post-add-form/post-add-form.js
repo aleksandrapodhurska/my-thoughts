@@ -1,31 +1,17 @@
-import React, {useRef} from 'react';
-import {v4 as uuidv4} from 'uuid';
+import React from 'react';
 import './post-add-form.css';
 
-const PostAddForm = ({posts, setPosts}) => {
-    const inputRef = useRef();
-    const handleAdding = (e) => {
-        e.preventDefault();
-        const label = e.target.addPost.value;
-        if (!label) return;
-        const newPost = {
-            id: uuidv4(),
-            label,
-            important: false,
-            like: false
-        };
-        setPosts([...posts, newPost]);
-        inputRef.current.value = '';
-    }
+const PostAddForm = (props) => {
     return(
         <form
-        onSubmit={handleAdding}
+        onSubmit={props.handleAdding}
         className='bottom-panel d-flex'>
-            <input
+            <textarea
                 className='new-post-label form-control'
                 name='addPost'
-                ref={inputRef}
+                ref={props.inputRef}
                 type='text'
+                rows="1"
                 placeholder='Enter your thoughts here'/>
             <button type='submit' className='btn btn-outline-secondary'>Add</button>
         </form>
