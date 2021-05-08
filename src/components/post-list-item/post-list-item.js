@@ -4,16 +4,18 @@ import star from './free-icon-stars-488577.png';
 import bin from './trash-bin.png'
 import heart from './favourite.svg'
 
-const PostListItem = ({posts, setPosts, handleDelete, onImportant, onLike}) => {
+const PostListItem = ({posts, setPosts, handleDelete, onImportant, onLike, searchedPosts, filtredPosts}) => {
     return(
         <div>
-            {posts.map((post) => (
+            {searchedPosts.map((post) => (
                 <li className={`
                 app-list-item list-group-item d-flex justify-content-between
                 ${post.important ? " important" : ""} 
                 ${post.like ? " like" : ""}`}
                 key={post.id}
                 onDoubleClick={() => onLike(post.id)}
+                // data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Doubleclick to like or unlike"
                 >
                 <span className='app-list-item-label'>{post.label}</span>
                 <div className='d-flex justify-content-center align-items-center'>

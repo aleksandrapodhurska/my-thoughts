@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
 import Header from '../header/app-header';
 import SearchPanel from '../search-panel/search-panel';
@@ -10,6 +10,7 @@ import PostAddForm from '../post-add-form/post-add-form';
 import './app.css';
 
 const App = () => {
+    const [keyword, setKeyword] = useState('');
     const [posts, setPosts] = useState([
         {
             id: uuidv4(),
@@ -31,6 +32,17 @@ const App = () => {
             like: true
         }
     ]);
+    // const [filter, setFilter] = useState('');
+    const [searchedPosts, setSearchedPosts] = useState([]);
+    // const [filtredPosts, setFiltredPosts] = useState([]);
+
+    useEffect(() => {
+        setSearchedPosts(
+            posts.filter((item) => {
+                return item.label.toLowerCase().includes(keyword.toLowerCase())
+            })
+        )
+    }, [keyword, posts])
 
     const inputRef = useRef();
     const handleAdding = (e) => {
@@ -61,14 +73,17 @@ const App = () => {
         setPosts(posts.map((item) => (item.id === id) ? {...item, like: !item.like} : item));
     }
 
+    const postsTotal = posts.length;
+    const postsLiked = posts.filter((post) => post.like).length;
+    
     return(
         <div className='app'>
-            <Header/>
+            <Header postsTotal={postsTotal} postsLiked={postsLiked}/>
             <div className='search-panel d-flex'>
-                <SearchPanel/>
+                <SearchPanel setKeyword={setKeyword}/>
                 <PostFilter/>
             </div>
-            <PostList posts={posts} setPosts={setPosts} handleDelete={handleDelete} onImportant={onImportant} onLike={onLike}/>
+            <PostList posts={posts} setPosts={setPosts} handleDelete={handleDelete} onImportant={onImportant} onLike={onLike} searchedPosts={searchedPosts}/>
             <PostAddForm handleAdding={handleAdding} inputRef={inputRef}/>
         </div>
     )
